@@ -1,0 +1,38 @@
+<br/><br/>
+<div class="col-sm-12 d-flex justify-content-center text-center" align="center">
+
+
+<mat-card class="box">
+  <mat-card-header>
+    <mat-card-title>Log in</mat-card-title>
+  </mat-card-header>
+
+  <form class="example-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <mat-form-field class="example-full-width" class="form-group">
+        <input matInput placeholder="Username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+      </mat-form-field>
+      <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+          <div *ngIf="f.username.errors.required">Username is required</div>
+      </div>
+      <br/>
+      <mat-form-field class="example-full-width" class="form-group">
+        <input matInput type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+      </mat-form-field>
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+    </mat-card-content>
+    <button type="submit" mat-stroked-button color="primary" class="btn-block">Log in</button>
+  </form>
+  <div>
+    <br/>
+    <facebook-login-button  [style]="'round'" (socialUser)="getSocialUser($event)"></facebook-login-button>
+  </div>
+</mat-card>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-fussion">
+  <p style="color: white">Please Wait. </p>
+</ngx-spinner>
+
+

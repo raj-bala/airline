@@ -1,0 +1,348 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="flightSearchForm" [editable]="isEditable">
+    <form [formGroup]="flightSearchForm">
+      <ng-template matStepLabel>Search Flights</ng-template>
+      <div class="ui-g">
+          <div class="ui-g-12 ui-md-6">
+                  <div class="ui-g-5">
+                    Origin
+                  </div>
+                  <div class="ui-g-7">
+                          <mat-form-field>
+                                  <mat-label>Origin City</mat-label>
+                                  <mat-select formControlName="origin">
+                                          <mat-option *ngFor="let city of flights"
+                                                  [value]="city.flightorigin">
+                                                  {{city.flightorigin}}
+                                          </mat-option>
+                                  </mat-select>
+                          </mat-form-field>
+
+                  </div>
+          </div>
+  </div>
+  <div class="ui-g">
+          <div class="ui-g-12 ui-md-6">
+                  <div class="ui-g-5">
+                    Destination City
+                  </div>
+                  <div class="ui-g-7">
+                          <mat-form-field>
+                                  <mat-label>Destination City</mat-label>
+                                  <mat-select formControlName="dest">
+                                          <mat-option *ngFor="let city of flights"
+                                                  [value]="city.flightdest">
+                                                  {{city.flightdest}}
+                                          </mat-option>
+                                  </mat-select>
+                          </mat-form-field>
+                  </div>
+          </div>
+  </div>
+  <div class="ui-g">
+          <div class="ui-g-12 ui-md-6">
+                  <div class="ui-g-5">
+                          Date of Boarding
+                  </div>
+                  <div class="ui-g-7">
+                          <p-calendar [touchUI]="true" [readonlyInput]="true"
+                                  formControlName="date" dateFormat="dd/mm/yy"
+                                  showButtonBar="true">
+                          </p-calendar>
+                  </div>
+          </div>
+  </div>
+  <div class="ui-g">
+    <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-5">
+                    Departure time
+            </div>
+            <div class="ui-g-7">
+                <input  type="time" pInputText placeholder="departure time" formControlName="time"/>
+            </div>
+    </div>
+</div>
+  <div class="ui-g">
+      <div class="ui-g-12 ui-md-6">
+              <div class="ui-g-5">
+      <button pButton type="button" label="Search" [disabled]="!flightSearchForm.valid" (click)="searchFlight(stepper)"></button>
+              </div>
+      </div>
+  </div>
+    </form>
+  </mat-step>
+  <mat-step [editable]="isEditable">
+          <ng-template matStepLabel>Flight Details</ng-template>
+          <p-table #dt [columns]="cols" [value]="flightsToDisplay" [responsive]="true" [paginator]="true" [rows]="10" [resizableColumns]="true" styleClass="ui-table-customers">
+
+                  <ng-template pTemplate="header" let-columns>
+                      <tr>
+                          <th *ngFor="let col of columns" [pSortableColumn]="col.field" pResizableColumn>
+                              {{col.header}}
+                              <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                          </th>
+                      </tr>
+
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData let-columns="columns">
+                      <tr [pSelectableRow]="rowData">
+                          <td *ngFor="let col of columns" class="ui-resizable-column">
+                               <div *ngIf="col.field=='id'">
+                                  <button pButton type="button"  (click)="checkSeatMap(rowData)" label="SeatMap" ></button>
+                               </div>
+                               <div *ngIf="col.field!='id'">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                  {{rowData[col.field]}}
+                               </div>
+                          </td>
+                      </tr>
+                  </ng-template>
+              </p-table>
+              <div>
+                      <button pButton type="button" (click)="moveBackToSearchFlight()" label="Back" ></button>
+              </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Seat Details</ng-template>
+    <div class="container">
+      <div class="col-lg-12 seat-container">
+        <div *ngFor="let seatrow of seatmap ">
+          <div class="col-12 pricing-label" *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation != ''">{{seatrow.seatPricingInformation}}</div>
+          <div class="seatrow container">
+            <div *ngIf="seatChartConfig?.showRowsLabel">
+              <div class="row-label"> {{seatrow.seatRowLabel}} </div>
+            </div>
+            <div *ngFor="let seatobj of seatrow.seats">
+              <div class="seat-item seat-space" style="color:white ; background-color:white" *ngIf="seatobj.seatLabel == ''"> &nbsp; </div>
+              <div tooltip="Seat : {{seatobj.seatLabel}}" placement="top" [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.status == 'available' ,'seat-booked' : seatobj.status == 'booked' ,'seat-unavailable' : seatobj.status == 'unavailable','seat-bookedcheckin' : seatobj.status == 'bookedcheckin' ,'seat-checkin' : seatobj.status == 'checkin' }"
+                (click)="selectSeat(seatobj)" *ngIf="(seatobj.status == 'bookedcheckin' || seatobj.status == 'checkin' || seatobj.status == 'available' )&& seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
+
+              <div tooltip="Seat not available" placement="top" [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }" *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button pButton type="button" (click)="moveBackToFlightSearch()" label="Back" ></button>
+  </div>
+  </mat-step>
+</mat-horizontal-stepper>
+<p-dialog header="Passenger Details" [(visible)]="showDialog" showEffect="fade" [modal]="true">
+  <div class="ui-g">
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> Passenger Name</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.personName}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> Gender</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.gender}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> Infants</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.infantCount}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> Transaction Number</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.transactionId}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> Seat Number</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.seat}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong>Check In Status</strong>
+      </div>
+      <div class="ui-g-8">
+        <div *ngIf="selectedPassengerTicket?.checkedin">
+          Yes
+        </div>
+        <div *ngIf="!selectedPassengerTicket?.checkedin">
+          <span class="text-danger"> No</span>
+        </div>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> Snackes</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.snackes}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> wheelChair</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.wheelChairProvision}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> shopping</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.shopping}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> flight Wifi</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.flightWifi}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> flight Entertainment</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.flightEntertainment}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> E magazines</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.magazines}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> fullMeal</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.fullMeal}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> miniMeal</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.miniMeal}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <strong> drinks</strong>
+      </div>
+      <div class="ui-g-8">
+        {{selectedPassengerTicket?.drinks}}
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="pi pi-fw pi-save" (click)="modifyData()" label="Modify User Services"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog header="Update Flight Service Details" [(visible)]="showModifyDialog" showEffect="fade" [modal]="true">
+  <div class="ui-g ui-fluid" *ngIf="selectedPassengerTicket">
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="wheelChair">WheelChair Provision</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="wheelChair" [(ngModel)]="selectedPassengerTicket.wheelChairProvision"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="shopping">Shopping</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="shopping" [(ngModel)]="selectedPassengerTicket.shopping"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="Wifi">Wifi</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="Wifi" [(ngModel)]="selectedPassengerTicket.flightWifi"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="flightEntertainment">Entertain ment</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="flightEntertainment" [(ngModel)]="selectedPassengerTicket.flightEntertainment"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="magazines">Magazines</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="magazines" [(ngModel)]="selectedPassengerTicket.magazines"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="fullMeal">Full Meal</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="fullMeal" [(ngModel)]="selectedPassengerTicket.fullMeal"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="miniMeal">Mini Meal</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="miniMeal" [(ngModel)]="selectedPassengerTicket.miniMeal"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="snackes">Snackes</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox binary="true" id="snackes" [(ngModel)]="selectedPassengerTicket.snackes"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="ui-g-4">
+        <label for="drinks">Drinks</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox id="drinks" binary="true" [(ngModel)]="selectedPassengerTicket.drinks"></p-checkbox>
+
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="pi pi-fw pi-save" (click)="updateServices()" label="Save"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+

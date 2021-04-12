@@ -1,0 +1,201 @@
+{
+  "User": [
+    {
+      "firstName": "raj",
+      "lastName": "bala",
+      "username": "admin",
+      "password": "admin@test",
+      "email": "raj@gmail.com",
+      "phone": 9876543210,
+      "role": "Admin",
+      "id": 1
+    },
+    {
+      "firstName": "Rajbala",
+      "lastName": "sah",
+      "username": "staff",
+      "password": "staff@test",
+      "email": "rajbala@gmail.com",
+      "phone": 8723456785,
+      "role": "Staff",
+      "id": 2
+    }
+  ],
+  "LoginUser": [],
+  "Flights": [
+    {
+      "flightnumber": "101",
+      "flightname": "Indigo",
+      "flightorigin": "Delhi",
+      "flightdest": "Ranchi",
+      "departuretime": "17:00",
+      "flightprice": 3000,
+      "arrivaltime": "18:43",
+      "childAllow": true,
+      "wheelChairProvision": true,
+      "shopping": false,
+      "flightWifi": false,
+      "flightEntertainment": false,
+      "magazines": false,
+      "fullMeal": false,
+      "miniMeal": false,
+      "snackes": true,
+      "drinks": true,
+      "id": 1
+    },
+    {
+      "flightnumber": "102",
+      "flightname": "Go Air",
+      "flightorigin": "Mumbai",
+      "flightdest": "Pune",
+      "departuretime": "18:00",
+      "flightprice": 4000,
+      "arrivaltime": "19:20",
+      "childAllow": true,
+      "wheelChairProvision": true,
+      "shopping": false,
+      "flightWifi": false,
+      "flightEntertainment": false,
+      "magazines": false,
+      "fullMeal": false,
+      "miniMeal": true,
+      "snackes": true,
+      "drinks": true,
+      "id": 2
+    }
+  ],
+  "CheckedInSeat": [
+    {
+      "flightId": 101,
+      "flightDateforSeat": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "bookedseatsForDate": [
+        "1_1",
+        "1_3"
+      ],
+      "id": 1
+    },
+    {
+      "flightId": 102,
+      "flightDateforSeat": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "bookedseatsForDate": [],
+      "id": 2
+    }
+  ],
+  "AllocatedSeat": [
+    {
+      "id": 1,
+      "flightnumber": 101,
+      "flightDateforSeat": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "bookedseatsForDate": [
+        "1_3",
+        "1_1"
+      ]
+    },
+    {
+      "id": 2,
+      "flightnumber": 102,
+      "flightDateforSeat": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "bookedseatsForDate": [
+        "1_2"
+      ]
+    }
+  ],
+  "PassengerTickets": [
+    {
+      "transactionId": 94755561,
+      "bookingDate": "Tue Aug 04 2020 10:51:10 GMT+0530 (India Standard Time)",
+      "pnrNumber": "WGGDUO",
+      "personName": "jaya",
+      "dob": "Thu Aug 02 2001 00:00:00 GMT+0530 (India Standard Time)",
+      "gender": "Female",
+      "address": "yttuhf",
+      "email": "jaya@gmail.com",
+      "mobileNumber": 873456712,
+      "passportNumber": "7836863",
+      "seat": "1_1",
+      "infantCount": "1",
+      "flightname": "Indigo",
+      "flightnumber": "101",
+      "flightorigin": "Delhi",
+      "flightdest": "Ranchi",
+      "flighttime": "17:00",
+      "dateofjourney": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "checkedin": true,
+      "childAllow": false,
+      "wheelChairProvision": false,
+      "shopping": false,
+      "flightWifi": false,
+      "flightEntertainment": false,
+      "magazines": false,
+      "fullMeal": false,
+      "miniMeal": false,
+      "snackes": true,
+      "drinks": false,
+      "id": 1
+    },
+    {
+      "transactionId": 98199528,
+      "bookingDate": "Wed Aug 05 2020 15:13:49 GMT+0530 (India Standard Time)",
+      "pnrNumber": "HPV3C3",
+      "personName": "Ram",
+      "dob": "Mon Aug 02 2004 00:00:00 GMT+0530 (India Standard Time)",
+      "gender": "Male",
+      "address": "yuyutyt",
+      "email": "ram@gmail.com",
+      "mobileNumber": 8745453342,
+      "passportNumber": "76767",
+      "seat": "1_3",
+      "infantCount": "0",
+      "flightname": "Indigo",
+      "flightnumber": "101",
+      "flightorigin": "Delhi",
+      "flightdest": "Ranchi",
+      "flighttime": "17:00",
+      "dateofjourney": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "checkedin": true,
+      "childAllow": false,
+      "wheelChairProvision": false,
+      "shopping": false,
+      "flightWifi": false,
+      "flightEntertainment": false,
+      "magazines": false,
+      "fullMeal": false,
+      "miniMeal": false,
+      "snackes": true,
+      "drinks": false,
+      "id": 2
+    },
+    {
+      "transactionId": 87926741,
+      "bookingDate": "Fri Aug 07 2020 23:20:32 GMT+0530 (India Standard Time)",
+      "pnrNumber": "G6YE2D",
+      "personName": "Raj",
+      "dob": "Tue Aug 24 1999 00:00:00 GMT+0530 (India Standard Time)",
+      "gender": "Male",
+      "address": "hhhjhjaa",
+      "email": "raj@gmail.com",
+      "mobileNumber": 8754454533,
+      "passportNumber": "",
+      "seat": "1_2",
+      "infantCount": "1",
+      "flightname": "Go Air",
+      "flightnumber": "102",
+      "flightorigin": "Mumbai",
+      "flightdest": "Pune",
+      "flighttime": "18:00",
+      "dateofjourney": "Sun Aug 30 2020 00:00:00 GMT+0530 (India Standard Time)",
+      "checkedin": false,
+      "childAllow": false,
+      "wheelChairProvision": false,
+      "shopping": false,
+      "flightWifi": false,
+      "flightEntertainment": false,
+      "magazines": false,
+      "fullMeal": false,
+      "miniMeal": false,
+      "snackes": true,
+      "drinks": false,
+      "id": 3
+    }
+  ]
+}

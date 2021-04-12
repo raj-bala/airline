@@ -1,0 +1,11 @@
+<div class="ui-g">
+  <div class="ui-g-12 ui-md-12 ui-lg-2">
+    <p-panelMenu [model]="items" [style]="{'width':'185px'}"></p-panelMenu>
+  </div>
+  <div class="ui-g-12 ui-md-12 ui-lg-10">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-fussion">
+  <p style="color: white">Please Wait. </p>
+</ngx-spinner>

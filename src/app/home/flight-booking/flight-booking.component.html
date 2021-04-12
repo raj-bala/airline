@@ -1,0 +1,433 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="addSearchFlightForm" [editable]="isEditable">
+         <form [formGroup]="addSearchFlightForm">
+                 <ng-template matStepLabel>Flight Search</ng-template>
+                 <div class="ui-g">
+                         <div class="ui-g-12 ui-md-6">
+                                 <div class="ui-g-4">
+                                         Source
+                                 </div>
+                                 <div class="ui-g-8">
+                                         <mat-form-field>
+                                                 <mat-label>Source City</mat-label>
+                                                 <mat-select formControlName="origin">
+                                                         <mat-option *ngFor="let city of flights"
+                                                                 [value]="city.flightorigin">
+                                                                 {{city.flightorigin}}
+                                                         </mat-option>
+                                                 </mat-select>
+                                         </mat-form-field>
+
+                                 </div>
+                         </div>
+                 </div>
+                 <div class="ui-g">
+                         <div class="ui-g-12 ui-md-6">
+                                 <div class="ui-g-4">
+                                         Destination
+                                 </div>
+                                 <div class="ui-g-8">
+                                         <mat-form-field>
+                                                 <mat-label>Destination City</mat-label>
+                                                 <mat-select formControlName="destination">
+                                                         <mat-option *ngFor="let city of flights"
+                                                                 [value]="city.flightdest">
+                                                                 {{city.flightdest}}
+                                                         </mat-option>
+                                                 </mat-select>
+                                         </mat-form-field>
+                                 </div>
+                         </div>
+                 </div>
+                 <div class="ui-g">
+                         <div class="ui-g-12 ui-md-6">
+                                 <div class="ui-g-4">
+                                     Travel date
+                                 </div>
+                                 <div class="ui-g-8">
+                                     <mat-form-field>
+                                       <input formControlName="date" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker">
+                                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                       <mat-datepicker #picker></mat-datepicker>
+                                     </mat-form-field>
+                                 </div>
+
+                         </div>
+                 </div>
+                 <div class="ui-g">
+                         <div class="ui-g-12 ui-md-6">
+                                 <div class="ui-g-4">
+                                     <mat-label>Number of Adults</mat-label>
+                                 </div>
+                                 <div class="ui-g-8">
+                                   <mat-form-field>
+                                         <input matInput formControlName="numberOfPassenger"/>
+                                       </mat-form-field>
+                                 </div>
+                         </div>
+                 </div>
+                 <div class="ui-g">
+                         <div class="ui-g-12 ui-md-6">
+                                 <div class="ui-g-4">
+                                         Number of Children
+                                 </div>
+                                 <div class="ui-g-8">
+                                   <mat-form-field>
+                                     <input matInput placeholder="infant" formControlName="infantCount"/>
+                                   </mat-form-field>
+                                 </div>
+                         </div>
+                 </div>
+
+                 <div class="ui-g">
+                         <div class="ui-g-12 ui-md-6">
+                                 <div class="ui-g-5">
+                                     <button mat-stroked-button color="primary" matStepperNext [disabled]="!addSearchFlightForm.valid"
+                                     (click)="SearchFlights(stepper)">Search</button>
+                                 </div>
+
+                         </div>
+                 </div>
+         </form>
+ </mat-step>
+ <mat-step [editable]="isEditable">
+         <form>
+                 <ng-template matStepLabel>Flights List</ng-template>
+
+                 <div *ngIf="this.passengerFlights.length>0; else Else">
+
+
+                         <p-table [columns]="cols" [value]="passengerFlights" selectionMode="single" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15" [responsive]="true" dataKey="flightnumber">
+                             <ng-template pTemplate="caption">
+                                 List of Flights
+                             </ng-template>
+                             <ng-template pTemplate="header" let-columns>
+                                 <tr>
+                                     <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                         {{col.header}}
+                                         <p-sortIcon [field]="col.field"></p-sortIcon>
+                                     </th>
+                                 </tr>
+                             </ng-template>
+                             <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                 <tr [pSelectableRow]="rowData">
+                                     <td *ngFor="let col of columns">
+                                         <span class="ui-column-title">{{col.header}}</span>
+                                         {{rowData[col.field]}}
+                                     </td>
+                                 </tr>
+                             </ng-template>
+
+                         </p-table>
+
+                          <p-dialog header="Flight Details" [(visible)]="displayDialog" [style]="{width: '300px'}">
+                             <div class="p-grid ui-fluid">
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Flight Number :</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.flightnumber }}
+                                     </div>
+                                 </div>
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Flight Name :</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.flightname }}
+                                     </div>
+                                 </div>
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Flight Source:</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.source }}
+                                     </div>
+                                 </div>
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Flight Destination:</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.destination }}
+                                     </div>
+                                 </div>
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Departure Time:</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.departTime }}
+                                     </div>
+                                 </div>
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Arrival Time :</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.reachDestination }}
+                                     </div>
+                                 </div>
+                                 <div class="ui-g-12">
+                                     <div class="ui-g-6">
+                                         <b>Price :</b>
+                                     </div>
+                                     <div class="ui-g-6">
+                                         {{ passengerFlight1?.price }}
+                                     </div>
+                                 </div>
+
+
+
+                             </div>
+                             <p-footer>
+                                     <button type="button" pButton icon="pi pi-check" (click)="showSeats()" label="SelectSeat"></button>
+                             </p-footer>
+                         </p-dialog>
+
+                         
+                  </div>
+                 <ng-template #Else>
+                         No flights found for the given search category
+                 </ng-template>
+                 <button mat-stroked-button color="warn" (click)="backToSearchPage()">Back</button>
+
+         </form>
+ </mat-step>
+ <mat-step [editable]="isEditable">
+
+          <ng-template matStepLabel> Airline Seat Chart</ng-template>
+         <div class="container">
+            <div class="col-lg-12 seat-container">
+             <div *ngFor="let seatrow of seatmap ">
+               <div class="col-12 pricing-label" *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation != ''">{{seatrow.seatPricingInformation}}</div>
+               <div class="seatrow container">
+                 <div *ngIf="seatChartConfig?.showRowsLabel">
+                   <div class="row-label"> {{seatrow.seatRowLabel}} </div>
+                 </div>
+                 <div *ngFor="let seatobj of seatrow.seats">
+                   <div class="seat-item seat-space" style="color:white ; background-color:white" *ngIf="seatobj.seatLabel == ''"> &nbsp; </div>
+                   <div tooltip="Seat : {{seatobj.seatLabel}} | Price : {{seatobj.price}}Rs" placement="top" [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.status == 'available' ,'seat-booked' : seatobj.status == 'booked' ,'seat-unavailable' : seatobj.status == 'unavailable' }"
+                     (click)="selectSeat(seatobj)" *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' )&& seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
+
+                   <div tooltip="Seat not available" placement="top" [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }" *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+
+
+
+
+         <div class="ui-g">
+                 <button mat-stroked-button (click)="backToSearchPage()">Back to Flight search</button>
+                 <button mat-stroked-button color="primary" (click)="confirmSeat()">Continue</button>
+         </div>
+       </div>
+
+ </mat-step>
+ <mat-step>
+         <ng-template matStepLabel>Passenger Details</ng-template>
+          <div class="ui-g">
+
+                         <form [formGroup]="passengersDetails">
+                                 <div formArrayName="detailsArray">
+                                         <div *ngFor="let arrayItem of passengerDetailsForms.controls; let i=index"
+                                                 [formGroupName]="i">
+                                                 <strong>Enter Passenger {{i+1}} details</strong>
+                                                 <div class="ui-g">
+                                                         <div class="ui-g-12 ui-md-6">
+                                                                 <div class="ui-g-4">
+                                                                         Passenger Name
+                                                                 </div>
+                                                                 <div class="ui-g-8">
+                                                                         <input pInputText
+                                                                                 formControlName="personName"
+                                                                                 placeholder="Passenger Full Name">
+                                                                 </div>
+                                                         </div>
+
+                                                         <div class="ui-g-12 ui-md-6">
+                                                             <div class="ui-g-4">
+                                                                     Date Of Birth
+                                                             </div>
+                                                             <div class="ui-g-8">
+                                                                 <p-calendar formControlName="dob" [monthNavigator]="true" [yearNavigator]="true" yearRange="1947:2030"></p-calendar>
+
+                                                             </div>
+                                                     </div>
+                                                 </div>
+
+                                                  <div class="ui-g">
+                                                         <div class="ui-g-12 ui-md-6">
+                                                                 <div class="ui-g-4">
+                                                                         Contact Number
+                                                                 </div>
+                                                                 <div class="ui-g-8">
+                                                                         <input pInputText
+                                                                                 formControlName="mobileNumber"
+                                                                                 type="number"
+                                                                                 placeholder="Phone Number">
+                                                                 </div>
+                                                         </div>
+                                                         <div class="ui-g-12 ui-md-6">
+                                                                 <div class="ui-g-4">
+                                                                         Gender
+                                                                 </div>
+                                                                 <div class="ui-g-8">
+                                                                         <mat-form-field>
+                                                                                 <mat-label>Gender</mat-label>
+                                                                                 <mat-select
+                                                                                         formControlName="gender">
+                                                                                         <mat-option
+                                                                                                 *ngFor="let gendr of genders"
+                                                                                                 [value]="gendr">
+                                                                                                 {{gendr}}
+                                                                                         </mat-option>
+                                                                                 </mat-select>
+                                                                         </mat-form-field>
+                                                                 </div>
+                                                         </div>
+                                                 </div>
+
+                                                  <div class="ui-g">
+                                                         <div class="ui-g-12 ui-md-6">
+                                                                 <div class="ui-g-4">
+                                                                         Email
+                                                                 </div>
+                                                                 <div class="ui-g-8">
+                                                                         <input pInputText
+                                                                                 formControlName="email"
+                                                                                 placeholder="Email">
+                                                                 </div>
+                                                         </div>
+                                                         <div class="ui-g-12 ui-md-6">
+                                                                 <div class="ui-g-4">
+                                                                         Address
+                                                                 </div>
+                                                                 <div class="ui-g-8">
+                                                                         <input pInputText
+                                                                                 formControlName="address"
+                                                                                 placeholder="Address">
+                                                                 </div>
+                                                         </div>
+                                                 </div>
+                                                 <div class="ui-g">
+                                                         <div class="ui-g-12 ui-md-6">
+                                                                 <div class="ui-g-4">
+                                                                         Passport Number
+                                                                 </div>
+                                                                 <div class="ui-g-8">
+                                                                         <input pInputText
+                                                                                 formControlName="passportNumber"
+                                                                                 placeholder="Enter passportNumber">
+                                                                 </div>
+                                                         </div>
+
+                                                 </div>
+
+                                         </div>
+                                 </div>
+                         </form>
+
+         </div>
+         <button type="button" (click)="showAncillaryDialog()" pButton icon="pi pi-info-circle" label="Add Services"></button>
+         <p-dialog header=" Flight Service" [(visible)]="ancillaryDisplay" [style]="{width: '300px'}">
+             <div class="ui-g ui-fluid">
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolchildAllowRequired">
+                         <div class="ui-g-4">
+                                 Infant Required
+                         </div>
+                         <div class="ui-g-8">
+                                         <mat-checkbox class="example-margin"  [formControl]="childAllowRequired"></mat-checkbox>
+                         </div>
+                 </div>
+
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolwheelChairRequired">
+                         <div class="ui-g-4">
+                                 WheelChair Required
+                         </div>
+                         <div class="ui-g-8">
+                                         <mat-checkbox class="example-margin" [formControl]="wheelChairRequired"></mat-checkbox>
+                         </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolshoppingRequired">
+                   <div class="ui-g-4">
+                     shopping Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="shoppingRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolflightWifiRequired">
+                   <div class="ui-g-4">
+                     flight Wifi Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="flightWifiRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolflightEntertainmentRequired">
+                   <div class="ui-g-4">
+                     flight Entertainment Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="flightEntertainmentRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolmagazinesRequired">
+                   <div class="ui-g-4">
+                     magazines Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="magazinesRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolfullMealRequired">
+                   <div class="ui-g-4">
+                     fullMeal Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="fullMealRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolminiMealRequired">
+                   <div class="ui-g-4">
+                     miniMeal Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="miniMealRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="boolsnackesRequired">
+                   <div class="ui-g-4">
+                     snackes Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="snackesRequired"></mat-checkbox>
+                   </div>
+                 </div>
+                 <div class="ui-g-12 ui-md-12" *ngIf="booldrinksRequired">
+                   <div class="ui-g-4">
+                     drinks Required
+                   </div>
+                   <div class="ui-g-8">
+                     <mat-checkbox class="example-margin" [formControl]="drinksRequired"></mat-checkbox>
+                   </div>
+                 </div>
+         </div>
+         </p-dialog>
+         <br />
+         <hr>
+         <div class="ui-g">
+           <button mat-stroked-button (click)="backToSearchPage()">Back to Search</button>&nbsp;&nbsp;
+           <button mat-stroked-button [disabled]="!passengersDetails.valid" color="primary"
+                   (click)="finishBooking()">
+             Book
+           </button>
+         </div>
+ </mat-step>
+</mat-horizontal-stepper>

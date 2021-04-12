@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" *ngIf="isCurrentUser">
+  <a routerLink="/login" class="navbar-brand">Airline</a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="navbar-nav">
+          <a class="nav-item nav-link" routerLink="/home/flightBooking">Home</a>
+          <a class="nav-item nav-link" routerLink="/admin/flightList" *ngIf="isAdmin">Admin</a>
+          <a class="nav-item nav-link" routerLink="/staff/flightList" *ngIf="isStaff || isAdmin">Staff</a>
+          <a class="nav-item nav-link" style="cursor:pointer" *ngIf="authsService.loggedIn()" (click)="logoutUser()">Logout</a>
+
+      </div>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" *ngIf="notisCurrentUser">
+  <a routerLink="/login" class="navbar-brand">Airline</a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse1">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarCollapse1">
+      <div class="navbar-nav">
+          <a class="nav-item nav-link" routerLink="/login">Login</a>
+      </div>
+  </div>
+</nav>
+
+<div>
+  <router-outlet></router-outlet>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-fussion">
+  <p style="color: white">Please Wait. </p>
+</ngx-spinner>
+
+
+
